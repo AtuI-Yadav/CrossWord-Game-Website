@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cross word Puzzel</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+#cross{
+	text-align: center;
+	width:30px;
+	height:30px;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+	border: 1px solid white;
+}
+#buttons{
+	width:30%;
+	float: right;
+}
+tr{
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+}
+td{
+	height: 30px;
+	width: 30px;
+}
+#leftBox{
+	float: left;
+}
+#puzzel{
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+	border: 4px solid black;	
+	margin-left: 10%;
+}
+.inputBox{
+		width: 40px;
+		height:40px;
+		border: 1px solid black;
+		text-align: center;
+}
+.blankBox{
+	width: 40px;
+	height:40px;
+	/* border: 1px solid white; */
+	padding: 2%;
+	text-align: center;
+	background-color: black;
+}
+
+</style>
+
+<script>
+//Globals
+var currentTextInput;
+var puzzelArrayData;
+var checkCount;
+var solveCount = 0;
+var clueCount = 0;
+
+//Loads the Crossword
+function initializeScreen(){
+	var puzzelTable = document.getElementById("puzzel");
+	puzzelArrayData = preparePuzzelArray();
+	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+		var row = puzzelTable.insertRow(-1);
+		var rowData = puzzelArrayData[i];
+		for(var j = 0 ; j < rowData.length ; j++){
+			var cell = row.insertCell(-1);
+			if(rowData[j] != 0){
+				var txtID = String('txt' + '_' + i + '_' + j);
+				cell.innerHTML = '<input type="text" class="inputBox" maxlength="1" style="text-transform: uppercase; font-weight: bold; font-size: large" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
+			}else{
+				// cell.style.backgroundColor  = "black";
+				cell.innerHTML = '<input type="text" class="blankBox" disabled>'
+			}
+		}
+	}
+	addHint();
+}
+//Adds the hint numbers
+function addHint(){
+	document.getElementById("txt_0_7").placeholder = "1";
+	document.getElementById("txt_1_7").placeholder = "2";
+	document.getElementById("txt_2_1").placeholder = "3";
+	document.getElementById("txt_2_5").placeholder = "4";
+	document.getElementById("txt_4_3").placeholder = "5";
+	document.getElementById("txt_5_0").placeholder = "6";
+	document.getElementById("txt_10_3").placeholder = "7";
+}
+//Stores ID of the selected cell into currentTextInput
+function textInputFocus(txtID123){
+	currentTextInput = txtID123;
+}
+//Returns Array
+function preparePuzzelArray(){
+var items = [	[0, 0, 0, 0, 0, 0, 0, 'm', 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 'a', 'r', 'e', 'a' ],
+				[0, 'r', 0, 0, 0, 'c', 0, 'g', 0, 0, 0 ],
+				[0, 'e', 0, 0, 0, 'a', 0, 'n', 0, 0, 0 ],
+				[0, 'c', 0, 'l', 0, 'p', 0, 'e', 0, 0, 0 ],
+				['r', 'e', 's', 'o', 'n', 'a', 'n', 't', 0, 0, 0 ],
+				[0, 'i', 0, 'o', 0, 'c', 0, 'i', 0, 0, 0 ],
+				[0, 'v', 0, 'p', 0, 'i', 0, 'c', 0, 0, 0 ],
+				[0, 'e', 0, 0, 0, 't', 0, 0, 0, 0, 0 ],
+				[0, 'r', 0, 0, 0, 'o', 0, 0, 0, 0, 0 ],
+				[0, 0, 0, 'c', 'a', 'r', 'd', 'o', 'i', 'd', 0 ],
+				
+			];
+return items;
+}
+//Clear All Button
+function clearAllClicked(){
+	currentTextInput = '';
+	var puzzelTable = document.getElementById("puzzel");
+	puzzelTable.innerHTML = '';
+    initializeScreen();
+}
+//Check button
+function checkClicked(){
+	var checkCount = 0;
+	for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+		var rowData = puzzelArrayData[i];
+		for(var j = 0 ; j < rowData.length ; j++){
+			if(rowData[j] != 0){
+				var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
+				if(selectedInputTextElement.value != puzzelArrayData[i][j]){
+					selectedInputTextElement.style.backgroundColor = '#f21335';
+					
+				}else{
+					selectedInputTextElement.style.backgroundColor = '#02e354';
+					var checkCount = checkCount + 1;
+					// alert(checkCount);
+					if (checkCount== 35 ){
+						// alert('Sucess !');  // Dispay the sucess
+						var name = window.prompt("Cogratulations :) \nEnter Your Name:");
+						alert(name + " your coupan is : XDM123 ");				
+					}
+				}
+			}
+		}
+	}
+	
+}
+
+//Clue Button
+function clueClicked(){
+	if(clueCount < 3){
+		clueCount = clueCount + 1; 			//count
+		if (currentTextInput != null){
+		var temp1 = currentTextInput;
+		var token = temp1.split("_");
+		var row = token[1];
+		var column = token[2];
+		document.getElementById(temp1).value = puzzelArrayData[row][column];
+		//checkClicked();
+	}
+	}else{
+		alert('Maximum Limit Reached :(')
+	}
+	
+
+}
+//Solve Button
+function solveClicked(){
+	if(solveCount < 1){
+		solveCount = solveCount + 1;			//counter
+		// alert(solveCount);
+		if (currentTextInput != null){
+		var temp1 = currentTextInput;
+		var token = temp1.split("_");
+		var row = token[1];
+		var column = token[2];
+		
+		// Print elements on top
+		for(j = row; j >= 0; j--){
+			if(puzzelArrayData[j][column] != 0){
+				document.getElementById('txt' + '_' + j + '_' + column).value = puzzelArrayData[j][column];
+				}else break;
+		}
+		// Print elements on right
+		for(i = column; i< puzzelArrayData[row].length; i++){
+			if(puzzelArrayData[row][i] != 0){
+				document.getElementById('txt' + '_' + row + '_' + i).value = puzzelArrayData[row][i];
+				}else break;
+		}
+		
+		// Print elements below
+		for(m = row; m< puzzelArrayData.length; m++){
+			if(puzzelArrayData[m][column] != 0){
+				document.getElementById('txt' + '_' + m + '_' + column).value = puzzelArrayData[m][column];
+				}else break;
+		}
+		// Print elements on left
+		for(k = column; k >= 0; k--){
+			if(puzzelArrayData[row][k] != 0){
+				document.getElementById('txt' + '_' + row + '_' + k).value = puzzelArrayData[row][k];
+				}else break;
+		}
+		// Done!
+		
+	}
+
+	}else{
+		alert('Maximum Limit Reached :(')
+	}
+
+}
+</script>
+</head>
+<body onload="initializeScreen()">
+<h1>Crossword: Small & Large Loop</h1>
+<div id="leftBox">
+<table id="puzzel">
+
+</table>
+</div>
+<div id="rightBox">
+<table class="allbutton">
+	<tr><td><input class="button1"  type="submit" value="CLEAR ALL" onclick="clearAllClicked()"></td>
+	<td><input class="button2"  type="submit" value="CHECK" onclick="checkClicked()"></td>
+	<td><input class="button3"  type="submit" value="SOLVE" onclick="solveClicked()"></td>
+	<td><input class="button3"  type="submit" value="CLUE" onclick="clueClicked()"></td></tr>
+</table>
+</div>
+<table class="hintsTable">
+		<tr class="tr1">
+			<td class="th1"><strong>Horizontal:</strong></td><td class="th1"><strong>Vertical:</strong></td>
+		</tr>
+		<tr class="tr1">
+			<td class="td1">2. From the radiation point of view,
+				 small loops are
+				 &nbsp;&nbsp;&nbsp; _________radiators.</td>
+				 <td class="td1">1. The small loop antenna is known as a 
+					&nbsp;&nbsp;&nbsp;&nbsp;________ since it behaves electrically as a 
+					&nbsp;&nbsp;&nbsp;&nbsp;coil.
+			</td>
+		</tr>
+		<tr class="tr1">
+			<td class="td1">6. Large loop antennas are also called as
+				&nbsp;&nbsp;&nbsp;&nbsp;________ antennas. </td>
+			<td class="td1">3. Small loop antenna  are better operated as
+				&nbsp;&nbsp;&nbsp;&nbsp;________ antenna.</td>
+		</tr>
+		<tr class="tr1">
+			<td class="td1">7. In loop antennas the radiation pattern formed 
+				&nbsp;&nbsp;&nbsp;&nbsp;is ?</td>
+			<td class="td1">4. For receiving a particular frequency signal, 
+				&nbsp;&nbsp;&nbsp;&nbsp;which tuning component must be used by the 
+				&nbsp;&nbsp;&nbsp;&nbsp;loop to form a resonant circuit for tuning to that 
+				&nbsp;&nbsp;&nbsp;&nbsp;frequency ?
+			</td>
+		</tr>
+		<tr class="tr1">
+			<td class="td1"></td>
+			<td class="td1">5. An RF current carrying coil is
+				 given a single turn &nbsp;&nbsp;&nbsp;&nbsp;into 
+				 a loop, can be used as an antenna called 
+				 &nbsp;&nbsp;&nbsp;&nbsp;as ________ antenna.</td>
+		</tr>
+		<tr class="tr1">
+			<td class="td1"></td>
+			<td class="td1"></td>
+		</tr>
+</table>
+<h4>
+	Develop by: Atul Yadav, Jatin Tak & Anurag Singh
+</h4>
+
+</body>
+</html>
